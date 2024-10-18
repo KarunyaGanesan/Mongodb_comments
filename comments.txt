@@ -1,0 +1,62 @@
+# MongoDB Operations
+
+1.  Create Operation:
+   // Create a new database named "library" and switch to it.
+   
+   library> use library  
+   OUTPUT:   switched to db library
+
+   // Create a collection named "books" with fields: title, author, and published_year.
+   // Insert multiple documents into the "books" collection.
+   
+   library> db.books.insertMany([{ title: "Eat That Frog!", author: "Brian Tracy", published_year: 2001 }, { title: "Think Straight", author: "Akiro", published_year: 2016 }, { title: "The Psychology of Money", author: "Morgan Housel", published_year: 2020 }, { title: "The Catcher in the Rye", author: "J.D. Salinger", published_year: 1951 }, { title: "The Great Gatsby", author: "F. Scott Fitzgerald", published_year: 2024 }])  
+   OUTPUT:   { acknowledged: true, insertedIds: { '0': ObjectId('6712894cf6769a5abb86b01d'), '1': ObjectId('6712894cf6769a5abb86b01e'), '2': ObjectId('6712894cf6769a5abb86b01f'), '3': ObjectId('6712894cf6769a5abb86b020'), '4': ObjectId('6712894cf6769a5abb86b021') } }
+
+2.  Read Operation:
+   // Retrieve all documents from the "books" collection.
+   
+   library> db.books.find()  
+   OUTPUT:   [ { _id: ObjectId('6712831b1c420d0ed086b01d'), name: 'Eat the frog!', author: 'Brian Tracy', published_year: 2024, genre: 'Procastination' }, { _id: ObjectId('671286f11c420d0ed086b01f'), name: 'Eat the frog!', author: 'Brian Tracy', published_year: 2024 }, { _id: ObjectId('6712894cf6769a5abb86b01d'), title: 'Eat That Frog!', author: 'Brian Tracy', published_year: 2001 }, { _id: ObjectId('6712894cf6769a5abb86b01e'), title: 'Think Straight', author: 'Akiro', published_year: 2016 }, { _id: ObjectId('6712894cf6769a5abb86b01f'), title: 'The Psychology of Money', author: 'Morgan Housel', published_year: 2020 }, { _id: ObjectId('6712894cf6769a5abb86b020'), title: 'The Catcher in the Rye', author: 'J.D. Salinger', published_year: 1951 }, { _id: ObjectId('6712894cf6769a5abb86b021'), title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published_year: 2024 } ]
+
+   // Find and display only the documents where the author is "Akiro".
+   
+   library> db.books.find({ author: "Akiro" })  
+   OUTPUT:   [ { _id: ObjectId('6712894cf6769a5abb86b01e'), title: 'Think Straight', author: 'Akiro', published_year: 2016 } ]
+
+   // Fetch and display the document with the earliest published year.
+   
+   library> db.books.find().sort({ published_year: 1 }).limit(1)  
+   OUTPUT:   [ { _id: ObjectId('6712894cf6769a5abb86b021'), title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published_year: 2024 } ]
+
+3.  Update Operation:
+   // Update the published year of the book with the title "The Catcher in the Rye" to the current year (2024).
+   
+   library> db.books.updateOne({ title: "The Great Gatsby" }, { $set: { published_year: 2024 } })  
+   OUTPUT:   { acknowledged: true, insertedId: null, matchedCount: 1, modifiedCount: 1, upsertedCount: 0 }
+
+   // Add a new field "genre" with the value "Procrastination" to all documents in the "books" collection.
+   
+   library> db.books.updateMany({}, { $set: { genre: "Procrastination" } })  
+   OUTPUT:   { acknowledged: true, insertedId: null, matchedCount: 7, modifiedCount: 7, upsertedCount: 0 }
+
+4.  Delete Operation:
+   // Remove the document with the title "Think Straight" from the "books" collection.
+   
+   library> db.books.deleteOne({ title: "Think Straight" })  
+   OUTPUT:   { acknowledged: true, deletedCount: 1 }
+
+   // Delete all documents from the "books" collection where the published year is before 2000.
+   
+   library> db.books.deleteMany({ published_year: { $lt: 2000 } })  
+   OUTPUT:   { acknowledged: true, deletedCount: 1 }
+
+5.  Advanced Query:
+   // Find and display the top 3 recently published books from the "books" collection.
+   
+   library> db.books.find().sort({ published_year: -1 }).limit(3).pretty()  
+   OUTPUT:   [ { _id: ObjectId('6712894cf6769a5abb86b021'), title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published_year: 2024, genre: 'Procrastination' }, { _id: ObjectId('671286f11c420d0ed086b01f'), name: 'Eat the frog!', author: 'Brian Tracy', published_year: 2024, genre: 'Procrastination' }, { _id: ObjectId('6712831b1c420d0ed086b01d'), name: 'Eat the frog!', author: 'Brian Tracy', published_year: 2024, genre: 'Procrastination' } ]
+
+   // Retrieve documents from the "books" collection where the title contains "Eat That Frog!" or "The Great Gatsby".
+   
+   library> db.books.find({ $or: [{ title: /Eat That Frog!/i }, { title: /The Great Gatsby/i }] })  
+   OUTPUT:   [ { _id: ObjectId('6712894cf6769a5abb86b021'), title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published_year: 2024, genre: 'Procrastination' } ]
