@@ -29,7 +29,7 @@
    OUTPUT:   [ { _id: ObjectId('6712894cf6769a5abb86b021'), title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published_year: 2024 } ]
 
 3.  Update Operation:
-   // Update the published year of the book with the title "The Catcher in the Rye" to the current year (2024).
+   // Update the published year of the book with the title "The Great Gatsby" to the current year (2024).
    
    library> db.books.updateOne({ title: "The Great Gatsby" }, { $set: { published_year: 2024 } })  
    OUTPUT:   { acknowledged: true, insertedId: null, matchedCount: 1, modifiedCount: 1, upsertedCount: 0 }
